@@ -1,0 +1,19 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:persistent="false"
+        android:key="version"
+        android:title="@string/pref_title_version" />
+
+    <Preference
+        android:persistent="false"
+        android:key="website"
+        android:title="@string/pref_title_website"
+        android:summary="@string/pref_summary_website" />
+
+    <Preference
+        android:persistent="false"
+        android:key="source"
+        android:title="@string/pref_title_source"
+        android:summary="@string/pref_summary_source" />
+
+</PreferenceScreen>
