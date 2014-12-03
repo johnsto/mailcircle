@@ -9,13 +9,17 @@ import android.accounts.OperationCanceledException;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -106,6 +110,13 @@ public class SettingsActivity extends PreferenceActivity implements Consts, Shar
         about.fragment = AboutPreferenceFragment.class.getName();
         about.title = getString(R.string.pref_about);
         target.add(about);
+
+        if(BuildConfig.DEBUG) {
+            Header debug = new Header();
+            debug.fragment = DebugPreferenceFragment.class.getName();
+            debug.title = "Debug";
+            target.add(debug);
+        }
     }
 
     @Override
@@ -387,6 +398,60 @@ public class SettingsActivity extends PreferenceActivity implements Consts, Shar
             addPreferencesFromResource(R.xml.pref_notification);
 
             bindPreferenceSummaryToValue(findPreference("notification_style"));
+        }
+    }
+
+    public static class DebugPreferenceFragment extends SubPreferenceFragment {
+        private NotificationManager mNM;
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_debug);
+
+            mNM = (NotificationManager)getActivity().getSystemService(NOTIFICATION_SERVICE);
+
+            findPreference("test_notification").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    final Resources res = getResources();
+
+                    int notifWidth = res.getDimensionPixelSize(android.R.dimen.notification_large_icon_width);
+                    int notifHeight = res.getDimensionPixelSize(android.R.dimen.notification_large_icon_height);
+
+                    Bitmap bitmap = Bitmap.createBitmap(notifWidth, notifHeight, Bitmap.Config.ARGB_8888);
+
+                    NotificationIconFactory factory = new NotificationIconFactory(res, bitmap)
+                            .setColor(res.getColor(R.color.material_red))
+                            .setNumber(9)
+                            .addSlice(4, res.getColor(R.color.material_red))
+                            .addSlice(3, res.getColor(R.color.material_green))
+                            .addSlice(2, res.getColor(R.color.material_blue))
+                            .setStyle(prefs.getString("notification_style", NotificationIconFactory.DEFAULT_STYLE.name));
+
+                    // Create notification
+                    Notification notif = new Notification.Builder(getActivity())
+                            .setNumber(9)
+                            .setSmallIcon(R.drawable.ic_notif_mail, 9)
+                            .setLargeIcon(factory.build())
+                            .setColor(res.getColor(R.color.material_red))
+                            .setContentTitle(res.getString(R.string.notif_title))
+                            .setContentText("dave (4), work (3), webmaster (2)")
+                            .build();
+
+                    // Display the notification
+                    mNM.notify(2, notif);
+
+                    return true;
+                }
+            });
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            mNM.cancel(2);
         }
     }
 

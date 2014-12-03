@@ -24,3 +24,11 @@ icon_ic_notif_mail:
 	rsvg-convert -w 44 -h 44 ic_notif_mail.svg -o ${RES_DIR}/drawable-xhdpi/ic_notif_mail.png
 	rsvg-convert -w 33 -h 33 ic_notif_mail.svg -o ${RES_DIR}/drawable-hdpi/ic_notif_mail.png
 	rsvg-convert -w 22 -h 22 ic_notif_mail.svg -o ${RES_DIR}/drawable-mdpi/ic_notif_mail.png
+
+market: market_icon market_feature
+
+market_icon:
+	rsvg-convert -w 512 -h 512 ic_launcher.svg -o market-icon.png
+
+market_feature:
+	rsvg-convert -w 1024 -h 500 market-feature.svg -o market-feature.png

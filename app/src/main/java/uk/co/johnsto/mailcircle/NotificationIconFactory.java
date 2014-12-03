@@ -170,7 +170,14 @@ public class NotificationIconFactory {
         String text = String.format("%,d", mNumber);
         Rect bounds = new Rect();
         textPaint.getTextBounds(text, 0, text.length(), bounds);
-        canvas.drawText(text, width / 2, height / 2 + bounds.height() / 2, textPaint);
+        int textX = width / 2 + 2;
+        int textY = height / 2 + bounds.height() / 2;
+
+        textPaint.setColor(Color.argb(127, 0, 0, 0));
+        canvas.drawText(text, textX + 2, textY + 2, textPaint);
+
+        textPaint.setColor(mTextColor);
+        canvas.drawText(text, textX, textY, textPaint);
 
         mDrawable.draw(canvas);
 
