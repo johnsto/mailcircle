@@ -7,8 +7,10 @@ import android.accounts.AccountManagerFuture;
 import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
@@ -28,6 +30,7 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.view.MenuItem;
+import android.webkit.WebView;
 
 import com.google.android.gm.contentprovider.GmailContract;
 
@@ -168,8 +171,26 @@ public class SettingsActivity extends PreferenceActivity implements Consts, Shar
         private void setAccounts(Account[] accounts) {
             PreferenceScreen screen = getPreferenceScreen();
             screen.removeAll();
+
             for (Account account : accounts) {
                 addAccountPreferences(screen, account.name);
+            }
+
+            if (accounts.length == 0) {
+                final Context context = getActivity();
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.dialog_no_accounts_title)
+                        .setMessage(R.string.dialog_no_accounts_message)
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(context, SettingsActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                            }
+                        })
+                        .show();
             }
         }
 
@@ -338,6 +359,23 @@ public class SettingsActivity extends PreferenceActivity implements Consts, Shar
             findPreference("version").setSummary(BuildConfig.VERSION_NAME);
             findPreference("website").setOnPreferenceClickListener(sBindPreferenceSummaryToBrowserListener);
             findPreference("source").setOnPreferenceClickListener(sBindPreferenceSummaryToBrowserListener);
+
+            findPreference("license").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference pref) {
+                    final Context context = pref.getContext();
+
+                    WebView webView = new WebView(context);
+                    webView.loadUrl("file:///android_asset/gpl-2.0-standalone.html");
+
+                    new AlertDialog.Builder(context)
+                            .setView(webView)
+                            .setNeutralButton(android.R.string.ok, null)
+                            .show();
+
+                    return true;
+                }
+            });
         }
     }
 
@@ -345,6 +383,7 @@ public class SettingsActivity extends PreferenceActivity implements Consts, Shar
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+
             addPreferencesFromResource(R.xml.pref_notification);
 
             bindPreferenceSummaryToValue(findPreference("notification_style"));

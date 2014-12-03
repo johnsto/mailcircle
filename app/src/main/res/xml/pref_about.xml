@@ -16,4 +16,10 @@
         android:title="@string/pref_title_source"
         android:summary="@string/pref_summary_source" />
 
+    <Preference
+        android:persistent="false"
+        android:key="license"
+        android:title="@string/pref_title_license"
+        android:summary="@string/pref_summary_license" />
+
 </PreferenceScreen>

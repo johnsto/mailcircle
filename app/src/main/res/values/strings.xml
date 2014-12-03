@@ -10,11 +10,16 @@
     <string name="pref_about">About</string>
     <string name="pref_notification">Notification</string>
     <string name="pref_title_enable_notification">Notifications</string>
-    <string name="pref_notification_style">Style</string>
+    <string name="pref_notification_style">Icon style</string>
     <string name="notif_title">Unread emails</string>
     <string name="pref_title_version">Version</string>
     <string name="pref_title_website">Website</string>
     <string name="pref_summary_website">https://johnsto.co.uk/mailcircle</string>
     <string name="pref_title_source">Source code</string>
     <string name="pref_summary_source">https://github.com/johnsto/mailcircle</string>
+    <string name="dialog_no_accounts_title">No accounts found</string>
+    <string name="dialog_no_accounts_message">MailCircle requires that you have at least one GMail account on your device.</string>
+    <string name="pref_title_license">Open source license</string>
+    <string name="pref_summary_license">GNU General Public License, v2</string>
+    <string name="dialog_license">Open source license</string>
 </resources>
